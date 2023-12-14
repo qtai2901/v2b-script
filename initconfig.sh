@@ -174,7 +174,9 @@ generate_config_file() {
             add_node_config
         else
             read -rp "Bạn có muốn tiếp tục thêm cấu hình nút không? (Nhấn enter để tiếp tục, nhập n hoặc không để thoát)" continue_adding_node
-           if [ "$fixed_api_info" = false ]; then
+            if [[ "$continue_adding_node" =~ ^[Nn][Oo]? ]]; then
+                break
+            elif [ "$fixed_api_info" = false ]; then
                 read -rp "Domain(không cần https://)：" ApiHost
                 read -rp "Key web：" ApiKey
             fi
