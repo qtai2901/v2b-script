@@ -113,20 +113,20 @@ install_V2bX() {
     cd /usr/local/V2bX/
 
     if  [ $# == 0 ] ;then
-        last_version=$(curl -Ls "https://api.github.com/repos/wyx2685/V2bX/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        last_version=$(curl -Ls "https://api.github.com/repos/qtai2901/V2bX/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
         if [[ ! -n "$last_version" ]]; then
             echo -e "${red}检测 V2bX 版本失败，可能是超出 Github API 限制，请稍后再试，或手动指定 V2bX 版本安装${plain}"
             exit 1
         fi
         echo -e "检测到 V2bX 最新版本：${last_version}，开始安装"
-        wget -q -N --no-check-certificate -O /usr/local/V2bX/V2bX-linux.zip https://github.com/wyx2685/V2bX/releases/download/${last_version}/V2bX-linux-${arch}.zip
+        wget -q -N --no-check-certificate -O /usr/local/V2bX/V2bX-linux.zip https://github.com/qtai2901/V2bX/releases/download/${last_version}/V2bX-linux-${arch}.zip
         if [[ $? -ne 0 ]]; then
             echo -e "${red}下载 V2bX 失败，请确保你的服务器能够下载 Github 的文件${plain}"
             exit 1
         fi
     else
         last_version=$1
-        url="https://github.com/wyx2685/V2bX/releases/download/${last_version}/V2bX-linux-${arch}.zip"
+        url="https://github.com/qtai2901/V2bX/releases/download/${last_version}/V2bX-linux-${arch}.zip"
         echo -e "开始安装 V2bX $1"
         wget -q -N --no-check-certificate -O /usr/local/V2bX/V2bX-linux.zip ${url}
         if [[ $? -ne 0 ]]; then
@@ -140,7 +140,7 @@ install_V2bX() {
     chmod +x V2bX
     mkdir /etc/V2bX/ -p
     rm /etc/systemd/system/V2bX.service -f
-    file="https://github.com/wyx2685/V2bX-script/raw/master/V2bX.service"
+    file="https://github.com/qtai2901/V2bX-script/raw/master/V2bX.service"
     wget -q -N --no-check-certificate -O /etc/systemd/system/V2bX.service ${file}
     #cp -f V2bX.service /etc/systemd/system/
     systemctl daemon-reload
@@ -153,7 +153,7 @@ install_V2bX() {
     if [[ ! -f /etc/V2bX/config.json ]]; then
         cp config.json /etc/V2bX/
         echo -e ""
-        echo -e "全新安装，请先参看教程：https://github.com/wyx2685/V2bX/tree/master/example，配置必要的内容"
+        echo -e "全新安装，请先参看教程：https://github.com/qtai2901/V2bX/tree/master/example，配置必要的内容"
         first_install=true
     else
         systemctl start V2bX
@@ -180,7 +180,7 @@ install_V2bX() {
     if [[ ! -f /etc/V2bX/custom_inbound.json ]]; then
         cp custom_inbound.json /etc/V2bX/
     fi
-    curl -o /usr/bin/V2bX -Ls https://raw.githubusercontent.com/wyx2685/V2bX-script/master/V2bX.sh
+    curl -o /usr/bin/V2bX -Ls https://raw.githubusercontent.com/qtai2901/V2b-script/master/V2bX.sh
     chmod +x /usr/bin/V2bX
     if [ ! -L /usr/bin/v2bx ]; then
         ln -s /usr/bin/V2bX /usr/bin/v2bx
@@ -189,33 +189,33 @@ install_V2bX() {
     cd $cur_dir
     rm -f install.sh
     echo -e ""
-    echo "V2bX 管理脚本使用方法 (兼容使用V2bX执行，大小写不敏感): "
+    echo "Cách sử dụng tập lệnh quản lý V2bX (tương thích với thực thi V2bX, không phân biệt chữ hoa chữ thường): "
     echo "------------------------------------------"
-    echo "V2bX              - 显示管理菜单 (功能更多)"
-    echo "V2bX start        - 启动 V2bX"
-    echo "V2bX stop         - 停止 V2bX"
-    echo "V2bX restart      - 重启 V2bX"
-    echo "V2bX status       - 查看 V2bX 状态"
-    echo "V2bX enable       - 设置 V2bX 开机自启"
-    echo "V2bX disable      - 取消 V2bX 开机自启"
-    echo "V2bX log          - 查看 V2bX 日志"
-    echo "V2bX x25519       - 生成 x25519 密钥"
-    echo "V2bX generate     - 生成 V2bX 配置文件"
-    echo "V2bX update       - 更新 V2bX"
-    echo "V2bX update x.x.x - 更新 V2bX 指定版本"
-    echo "V2bX install      - 安装 V2bX"
-    echo "V2bX uninstall    - 卸载 V2bX"
-    echo "V2bX version      - 查看 V2bX 版本"
+    echo "V2bX              - Hiển thị menu quản lý (nhiều chức năng hơn)"
+    echo "V2bX start        - Khởi động V2bX"
+    echo "V2bX stop         - Dừng V2bX"
+    echo "V2bX restart      - Khởi động lại V2bX"
+    echo "V2bX status       - Xem trạng thái V2bX"
+    echo "V2bX enable       - Bật V2bX "
+    echo "V2bX disable      - Tắt V2bX "
+    echo "V2bX log          - Xem log V2bX "
+    echo "V2bX x25519       -  Tạo private key V2bX cho reality"
+    echo "V2bX generate     - Tạo tệp cấu hình V2bX"
+    echo "V2bX update       - Cập nhật V2bX"
+    echo "V2bX update x.x.x - Cập nhật V2bX version x.x.x"
+    echo "V2bX install      - Install V2bX"
+    echo "V2bX uninstall    - uninstall V2bX"
+    echo "V2bX version      - Xem version V2bX "
     echo "------------------------------------------"
     # 首次安装询问是否生成配置文件
     if [[ $first_install == true ]]; then
-        read -rp "检测到你为第一次安装V2bX,是否自动直接生成配置文件？(y/n): " if_generate
+        read -rp "Phát hiện bạn đang cài đặt V2bX lần đầu tiên, file cấu hình có được tạo tự động trực tiếp không?？(y/n): " if_generate
         if [[ $if_generate == [Yy] ]]; then
-            curl -o ./initconfig.sh -Ls https://raw.githubusercontent.com/wyx2685/V2bX-script/master/initconfig.sh
+            curl -o ./initconfig.sh -Ls https://raw.githubusercontent.com/qtai2901/V2b-script/master/initconfig.sh
             source initconfig.sh
             rm initconfig.sh -f
             generate_config_file
-            read -rp "是否安装bbr内核 ?(y/n): " if_install_bbr
+            read -rp "Có nên cài đặt kernel bbr không ?(y/n): " if_install_bbr
             if [[ $if_install_bbr == [Yy] ]]; then
                 install_bbr
             fi
@@ -223,6 +223,6 @@ install_V2bX() {
     fi
 }
 
-echo -e "${green}开始安装${plain}"
+echo -e "${green}bắt đầu cài đặt${plain}"
 install_base
 install_V2bX $1
