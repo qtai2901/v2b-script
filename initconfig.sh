@@ -111,7 +111,7 @@ EOF
     node_config=$(cat <<EOF
 {
             "Core": "$core",
-            "ApiHost": "$ApiHost",
+            "ApiHost": "https://$ApiHost",
             "ApiKey": "$ApiKey",
             "NodeID": $NodeID,
             "NodeType": "$NodeType",
