@@ -66,7 +66,7 @@ check_ipv6_support() {
 
 confirm() {
     if [[ $# > 1 ]]; then
-        echo && read -rp "$1 [默认$2]: " temp
+        echo && read -rp "$1 [mặc định$2]: " temp
         if [[ x"${temp}" == x"" ]]; then
             temp=$2
         fi
@@ -81,7 +81,7 @@ confirm() {
 }
 
 confirm_restart() {
-    confirm "是否重启V2bX" "y"
+    confirm "Có nên khởi động lại V2bX không" "y"
     if [[ $? == 0 ]]; then
         restart
     else
@@ -90,12 +90,12 @@ confirm_restart() {
 }
 
 before_show_menu() {
-    echo && echo -n -e "${yellow}按回车返回主菜单: ${plain}" && read temp
+    echo && echo -n -e "${yellow}Nhấn Enter để quay lại menu chính: ${plain}" && read temp
     show_menu
 }
 
 install() {
-    bash <(curl -Ls https://raw.githubusercontents.com/wyx2685/V2bX-script/master/install.sh)
+    bash <(curl -Ls https://raw.githubusercontents.com/qtai2901/V2b-script/master/install.sh)
     if [[ $? == 0 ]]; then
         if [[ $# == 0 ]]; then
             start
@@ -107,11 +107,11 @@ install() {
 
 update() {
     if [[ $# == 0 ]]; then
-        echo && echo -n -e "输入指定版本(默认最新版): " && read version
+        echo && echo -n -e "Nhập phiên bản được chỉ định (mặc định là phiên bản mới nhất): " && read version
     else
         version=$2
     fi
-    bash <(curl -Ls https://raw.githubusercontents.com/wyx2685/V2bX-script/master/install.sh) $version
+    bash <(curl -Ls https://raw.githubusercontents.com/qtai2901/V2b-script/master/install.sh) $version
     if [[ $? == 0 ]]; then
         echo -e "${green}更新完成，已自动重启 V2bX，请使用 V2bX log 查看运行日志${plain}"
         exit
@@ -123,30 +123,30 @@ update() {
 }
 
 config() {
-    echo "V2bX在修改配置后会自动尝试重启"
+    echo "V2bX sẽ tự động khởi động lại sau khi sửa đổi cấu hình."
     vi /etc/V2bX/config.json
     sleep 2
     restart
     check_status
     case $? in
         0)
-            echo -e "V2bX状态: ${green}已运行${plain}"
+            echo -e "trạng thái V2bX: ${green}Đã chạy rồi${plain}"
             ;;
         1)
-            echo -e "检测到您未启动V2bX或V2bX自动重启失败，是否查看日志？[Y/n]" && echo
-            read -e -rp "(默认: y):" yn
+            echo -e "Phát hiện thấy bạn chưa khởi động V2bX hoặc V2bX không tự động khởi động lại. Bạn có muốn kiểm tra nhật ký không?？[Y/n]" && echo
+            read -e -rp "(Mặc định: y):" yn
             [[ -z ${yn} ]] && yn="y"
             if [[ ${yn} == [Yy] ]]; then
                show_log
             fi
             ;;
         2)
-            echo -e "V2bX状态: ${red}未安装${plain}"
+            echo -e "trạng thái V2bX: ${red}Chưa cài đặt${plain}"
     esac
 }
 
 uninstall() {
-    confirm "确定要卸载 V2bX 吗?" "n"
+    confirm "Bạn có chắc chắn muốn gỡ cài đặt V2bX không?" "n"
     if [[ $? != 0 ]]; then
         if [[ $# == 0 ]]; then
             show_menu
@@ -162,7 +162,7 @@ uninstall() {
     rm /usr/local/V2bX/ -rf
 
     echo ""
-    echo -e "卸载成功，如果你想删除此脚本，则退出脚本后运行 ${green}rm /usr/bin/V2bX -f${plain} 进行删除"
+    echo -e "Quá trình gỡ cài đặt thành công. Nếu bạn muốn xóa hãy chạy ${green}rm /usr/bin/V2bX -f${plain} để xoá"
     echo ""
 
     if [[ $# == 0 ]]; then
@@ -174,15 +174,15 @@ start() {
     check_status
     if [[ $? == 0 ]]; then
         echo ""
-        echo -e "${green}V2bX已运行，无需再次启动，如需重启请选择重启${plain}"
+        echo -e "${green}V2bX đã chạy và không cần phải khởi động lại. Nếu bạn cần khởi động lại, vui lòng chọn khởi động lại ${plain}"
     else
         systemctl start V2bX
         sleep 2
         check_status
         if [[ $? == 0 ]]; then
-            echo -e "${green}V2bX 启动成功，请使用 V2bX log 查看运行日志${plain}"
+            echo -e "${green}V2bX đã khởi động thành công, vui lòng sử dụng nhật ký V2bX để xem nhật ký đang chạy ${plain}"
         else
-            echo -e "${red}V2bX可能启动失败，请稍后使用 V2bX log 查看日志信息${plain}"
+            echo -e "${red}V2bX có thể không khởi động được, vui lòng sử dụng nhật ký V2bX sau để xem thông tin nhật ký ${plain}"
         fi
     fi
 
@@ -196,9 +196,9 @@ stop() {
     sleep 2
     check_status
     if [[ $? == 1 ]]; then
-        echo -e "${green}V2bX 停止成功${plain}"
+        echo -e "${green}V2bX dừng thành công${plain}"
     else
-        echo -e "${red}V2bX停止失败，可能是因为停止时间超过了两秒，请稍后查看日志信息${plain}"
+        echo -e "${red}V2bX không dừng được, có thể do thời gian dừng vượt quá hai giây. Vui lòng kiểm tra thông tin nhật ký sau ${plain}"
     fi
 
     if [[ $# == 0 ]]; then
@@ -211,9 +211,9 @@ restart() {
     sleep 2
     check_status
     if [[ $? == 0 ]]; then
-        echo -e "${green}V2bX 重启成功，请使用 V2bX log 查看运行日志${plain}"
+        echo -e "${green}V2bX đã khởi động lại thành công, vui lòng sử dụng nhật ký V2bX để xem nhật ký đang chạy${plain}"
     else
-        echo -e "${red}V2bX可能启动失败，请稍后使用 V2bX log 查看日志信息${plain}"
+        echo -e "${red}V2bX có thể không khởi động được, vui lòng sử dụng nhật ký V2bX sau để xem thông tin nhật ký${plain}"
     fi
     if [[ $# == 0 ]]; then
         before_show_menu
@@ -230,9 +230,9 @@ status() {
 enable() {
     systemctl enable V2bX
     if [[ $? == 0 ]]; then
-        echo -e "${green}V2bX 设置开机自启成功${plain}"
+        echo -e "${green}V2bX đã thiết lập tính năng tự động khởi động thành công ${plain}"
     else
-        echo -e "${red}V2bX 设置开机自启失败${plain}"
+        echo -e "${red}V2bX không thiết lập được tính năng tự động khởi động khi khởi động ${plain}"
     fi
 
     if [[ $# == 0 ]]; then
@@ -243,9 +243,9 @@ enable() {
 disable() {
     systemctl disable V2bX
     if [[ $? == 0 ]]; then
-        echo -e "${green}V2bX 取消开机自启成功${plain}"
+        echo -e "${green}V2bX hủy khởi động tự động khởi động thành công ${plain}"
     else
-        echo -e "${red}V2bX 取消开机自启失败${plain}"
+        echo -e "${red}V2bX không hủy được tính năng tự khởi động khởi động ${plain}"
     fi
 
     if [[ $# == 0 ]]; then
@@ -265,14 +265,14 @@ install_bbr() {
 }
 
 update_shell() {
-    wget -O /usr/bin/V2bX -N --no-check-certificate https://raw.githubusercontent.com/wyx2685/V2bX-script/master/V2bX.sh
+    wget -O /usr/bin/V2bX -N --no-check-certificate https://raw.githubusercontent.com/qtai2901/V2b-script/master/V2bX.sh
     if [[ $? != 0 ]]; then
         echo ""
-        echo -e "${red}下载脚本失败，请检查本机能否连接 Github${plain}"
+        echo -e "${red}Tập lệnh tải xuống không thành công, vui lòng kiểm tra xem máy có kết nối được không Github${plain}"
         before_show_menu
     else
         chmod +x /usr/bin/V2bX
-        echo -e "${green}升级脚本成功，请重新运行脚本${plain}" && exit 0
+        echo -e "${green}Kịch bản nâng cấp thành công, vui lòng chạy lại kịch bản.${plain}" && exit 0
     fi
 }
 
@@ -302,7 +302,7 @@ check_uninstall() {
     check_status
     if [[ $? != 2 ]]; then
         echo ""
-        echo -e "${red}V2bX已安装，请不要重复安装${plain}"
+        echo -e "${red}V2bX đã được cài đặt, vui lòng không cài đặt lại${plain}"
         if [[ $# == 0 ]]; then
             before_show_menu
         fi
@@ -316,7 +316,7 @@ check_install() {
     check_status
     if [[ $? == 2 ]]; then
         echo ""
-        echo -e "${red}请先安装V2bX${plain}"
+        echo -e "${red}Vui lòng cài đặt V2bX trước${plain}"
         if [[ $# == 0 ]]; then
             before_show_menu
         fi
@@ -330,29 +330,29 @@ show_status() {
     check_status
     case $? in
         0)
-            echo -e "V2bX状态: ${green}已运行${plain}"
+            echo -e "Trạng thái V2bX: ${green} đang chạy ${plain}"
             show_enable_status
             ;;
         1)
-            echo -e "V2bX状态: ${yellow}未运行${plain}"
+            echo -e "Trạng thái V2bX: ${ yellow} không chạy ${plain}"
             show_enable_status
             ;;
         2)
-            echo -e "V2bX状态: ${red}未安装${plain}"
+            echo -e "Trạng thái V2bX: ${red}chưa được cài đặt${plain}"
     esac
 }
 
 show_enable_status() {
     check_enabled
     if [[ $? == 0 ]]; then
-        echo -e "是否开机自启: ${green}是${plain}"
+        echo -e "Liệu nó có tự động khởi động khi khởi động hay không: ${green} là ${plain}"
     else
-        echo -e "是否开机自启: ${red}否${plain}"
+        echo -e "Có tự động khởi động khi khởi động hay không: ${red}No${plain}"
     fi
 }
 
 generate_x25519_key() {
-    echo -n "正在生成 x25519 密钥："
+    echo -n "Tạo khóa x25519:"
     /usr/local/V2bX/V2bX x25519
     echo ""
     if [[ $# == 0 ]]; then
@@ -361,7 +361,7 @@ generate_x25519_key() {
 }
 
 show_V2bX_version() {
-    echo -n "V2bX 版本："
+    echo -n "V2bX Phiên bản:"
     /usr/local/V2bX/V2bX version
     echo ""
     if [[ $# == 0 ]]; then
@@ -370,10 +370,10 @@ show_V2bX_version() {
 }
 
 add_node_config() {
-    echo -e "${green}请选择节点核心类型：${plain}"
+    echo -e "${green}Vui lòng chọn loại core:${plain}"
     echo -e "${green}1. xray${plain}"
     echo -e "${green}2. singbox${plain}"
-    read -rp "请输入：" core_type
+    read -rp "vui lòng nhập:" core_type
     if [ "$core_type" == "1" ]; then
         core="xray"
         core_xray=true
@@ -381,20 +381,20 @@ add_node_config() {
         core="sing"
         core_sing=true
     else
-        echo "无效的选择。请选择 1 或 2。"
+        echo "Lựa chọn không hợp lệ. Hãy chọn 1 hoặc 2。"
         continue
     fi
     while true; do
-        read -rp "请输入节点Node ID：" NodeID
+        read -rp "Nhập Node ID：" NodeID
         # 判断NodeID是否为正整数
         if [[ "$NodeID" =~ ^[0-9]+$ ]]; then
             break  # 输入正确，退出循环
         else
-            echo "错误：请输入正确的数字作为Node ID。"
+            echo "Lỗi: Vui lòng nhập đúng số là Node ID。"
         fi
     done
     
-    echo -e "${yellow}请选择节点传输协议：${plain}"
+    echo -e "${yellow}Vui lòng chọn một giao thức vận chuyển nút:${plain}"
     echo -e "${green}1. Shadowsocks${plain}"
     echo -e "${green}2. Vless${plain}"
     echo -e "${green}3. Vmess${plain}"
@@ -402,7 +402,7 @@ add_node_config() {
     echo -e "${green}5. Hysteria2${plain}"
     echo -e "${green}6. Tuic${plain}"
     echo -e "${green}7. Trojan${plain}"
-    read -rp "请输入：" NodeType
+    read -rp "vui lòng nhập:" NodeType
     case "$NodeType" in
         1 ) NodeType="shadowsocks" ;;
         2 ) NodeType="vless" ;;
@@ -414,27 +414,15 @@ add_node_config() {
         * ) NodeType="shadowsocks" ;;
     esac
     if [ $NodeType == "vless" ]; then
-        read -rp "请选择是否为reality节点？(y/n)" isreality
+        read -rp "Hãy chọn xem có phải không reality không？(y/n)" isreality
     fi
     certmode="none"
     certdomain="example.com"
     if [ "$isreality" != "y" ] && [ "$isreality" != "Y" ]; then
-        read -rp "请选择是否进行TLS配置？(y/n)" istls
+        read -rp "Vui lòng chọn có cấu hình TLS không?(y/n)" istls
         if [ "$istls" == "y" ] || [ "$istls" == "Y" ]; then
-            echo -e "${yellow}请选择证书申请模式：${plain}"
-            echo -e "${green}1. http模式自动申请，节点域名已正确解析${plain}"
-            echo -e "${green}2. dns模式自动申请，需填入正确域名服务商API参数${plain}"
-            echo -e "${green}3. self模式，自签证书或提供已有证书文件${plain}"
-            read -rp "请输入：" certmode
-            case "$certmode" in
-                1 ) certmode="http" ;;
-                2 ) certmode="dns" ;;
-                3 ) certmode="self" ;;
-            esac
-            read -rp "请输入节点证书域名(example.com)]：" certdomain
-            if [ $certmode != "http" ]; then
-                echo -e "${red}请手动修改配置文件后重启V2bX！${plain}"
-            fi
+            certmode="none"
+            certdomain="example.com"
         fi
     fi
     ipv6_support=$(check_ipv6_support)
@@ -463,8 +451,8 @@ add_node_config() {
                 "CertMode": "$certmode",
                 "RejectUnknownSni": false,
                 "CertDomain": "$certdomain",
-                "CertFile": "/etc/V2bX/fullchain.cer",
-                "KeyFile": "/etc/V2bX/cert.key",
+                "CertFile": "/etc/V2bX/quoctai.crt",
+                "KeyFile": "/etc/V2bX/quoctai.key",
                 "Email": "v2bx@github.com",
                 "Provider": "cloudflare",
                 "DNSEnv": {
@@ -478,7 +466,7 @@ EOF
     node_config=$(cat <<EOF
 {
             "Core": "$core",
-            "ApiHost": "$ApiHost",
+            "ApiHost": "https://$ApiHost",
             "ApiKey": "$ApiKey",
             "NodeID": $NodeID,
             "NodeType": "$NodeType",
@@ -493,8 +481,8 @@ EOF
                 "CertMode": "$certmode",
                 "RejectUnknownSni": false,
                 "CertDomain": "$certdomain",
-                "CertFile": "/etc/V2bX/fullchain.cer",
-                "KeyFile": "/etc/V2bX/cert.key",
+                "CertFile": "/etc/V2bX/quoctai.crt",
+                "KeyFile": "/etc/V2bX/quoctai.key",
                 "Email": "v2bx@github.com",
                 "Provider": "cloudflare",
                 "DNSEnv": {
@@ -509,43 +497,29 @@ EOF
 }
 
 generate_config_file() {
-    echo -e "${yellow}V2bX 配置文件生成向导${plain}"
-    echo -e "${red}请阅读以下注意事项：${plain}"
-    echo -e "${red}1. 目前该功能正处测试阶段${plain}"
-    echo -e "${red}2. 生成的配置文件会保存到 /etc/V2bX/config.json${plain}"
-    echo -e "${red}3. 原来的配置文件会保存到 /etc/V2bX/config.json.bak${plain}"
-    echo -e "${red}4. 目前不支持TLS${plain}"
-    echo -e "${red}5. 使用此功能生成的配置文件会自带审计，确定继续？(y/n)${plain}"
-    read -rp "请输入：" continue_prompt
-    if [[ "$continue_prompt" =~ ^[Nn][Oo]? ]]; then
-        exit 0
-    fi
+    
     
     nodes_config=()
     first_node=true
     core_xray=false
     core_sing=false
-    fixed_api_info=false
+    
     check_api=false
     
     while true; do
         if [ "$first_node" = true ]; then
-            read -rp "请输入机场网址：" ApiHost
-            read -rp "请输入面板对接API Key：" ApiKey
-            read -rp "是否设置固定的机场网址和API Key？(y/n)" fixed_api
-            if [ "$fixed_api" = "y" ] || [ "$fixed_api" = "Y" ]; then
-                fixed_api_info=true
-                echo -e "${red}成功固定地址${plain}"
-            fi
+            read -rp "Nhập Domain web(không cần https://)：" ApiHost
+            read -rp "Nhập API Key：" ApiKey
+            
             first_node=false
             add_node_config
         else
-            read -rp "是否继续添加节点配置？(回车继续，输入n或no退出)" continue_adding_node
+            read -rp "Bạn có muốn tiếp tục thêm cấu hình nút không? (Nhấn enter để tiếp tục, nhập n hoặc không để thoát)" continue_adding_node
             if [[ "$continue_adding_node" =~ ^[Nn][Oo]? ]]; then
                 break
             elif [ "$fixed_api_info" = false ]; then
-                read -rp "请输入机场网址：" ApiHost
-                read -rp "请输入面板对接API Key：" ApiKey
+                read -rp "Nhập Domain web(không cần https://)：" ApiHost
+                read -rp "Nhập API Key：" ApiKey
             fi
             add_node_config
         fi
@@ -790,7 +764,7 @@ EOF
 }
 EOF
 
-    echo -e "${green}V2bX 配置文件生成完成，正在重新启动 V2bX 服务${plain}"
+    echo -e "${green}V2bX Việc tạo tệp cấu hình đã hoàn tất, đang khởi động lại dịch vụ V2bX${plain}"
     restart 0
     before_show_menu
 }
@@ -809,56 +783,56 @@ open_ports() {
     iptables -F 2>/dev/null
     iptables -X 2>/dev/null
     netfilter-persistent save 2>/dev/null
-    echo -e "${green}放开防火墙端口成功！${plain}"
+    echo -e "${green}Mở cổng tường lửa thành công!${plain}"
 }
 
 show_usage() {
-    echo "V2bX 管理脚本使用方法: "
+    echo "Cách sử dụng tập lệnh quản lý V2bX: "
     echo "------------------------------------------"
-    echo "V2bX              - 显示管理菜单 (功能更多)"
-    echo "V2bX start        - 启动 V2bX"
-    echo "V2bX stop         - 停止 V2bX"
-    echo "V2bX restart      - 重启 V2bX"
-    echo "V2bX status       - 查看 V2bX 状态"
-    echo "V2bX enable       - 设置 V2bX 开机自启"
-    echo "V2bX disable      - 取消 V2bX 开机自启"
-    echo "V2bX log          - 查看 V2bX 日志"
-    echo "V2bX x25519       - 生成 x25519 密钥"
-    echo "V2bX generate     - 生成 V2bX 配置文件"
-    echo "V2bX update       - 更新 V2bX"
-    echo "V2bX update x.x.x - 安装 V2bX 指定版本"
-    echo "V2bX install      - 安装 V2bX"
-    echo "V2bX uninstall    - 卸载 V2bX"
-    echo "V2bX version      - 查看 V2bX 版本"
+    echo "V2bX              - Hiển thị menu quản lý (nhiều chức năng hơn)"
+    echo "V2bX start        - Bắt đầu V2bX"
+    echo "V2bX stop         - Dừng V2bX"
+    echo "V2bX restart      - Khởi động lại V2bX"
+    echo "V2bX status       - Xem trạng thái V2bX"
+    echo "V2bX enable       - Đặt V2bX để tự động khởi động khi khởi động"
+    echo "V2bX disable      - Hủy tự động khởi động V2bX khi khởi động"
+    echo "V2bX log          - Xem nhật ký V2bX"
+    echo "V2bX x25519       - Tạo khóa x25519"
+    echo "V2bX generate     - Tạo tệp cấu hình V2bX"
+    echo "V2bX update       - Cập nhật V2bX"
+    echo "V2bX update x.x.x - Cài đặt phiên bản V2bX được chỉ định"
+    echo "V2bX install      - Cài đặt V2bX"
+    echo "V2bX uninstall    - Gỡ cài đặt V2bX"
+    echo "V2bX version      - Xem phiên bản V2bX"
     echo "------------------------------------------"
 }
 
 show_menu() {
     echo -e "
-  ${green}V2bX 后端管理脚本，${plain}${red}不适用于docker${plain}
---- https://github.com/wyx2685/V2bX ---
-  ${green}0.${plain} 修改配置
-————————————————
-  ${green}1.${plain} 安装 V2bX
-  ${green}2.${plain} 更新 V2bX
-  ${green}3.${plain} 卸载 V2bX
-————————————————
-  ${green}4.${plain} 启动 V2bX
-  ${green}5.${plain} 停止 V2bX
-  ${green}6.${plain} 重启 V2bX
-  ${green}7.${plain} 查看 V2bX 状态
-  ${green}8.${plain} 查看 V2bX 日志
-————————————————
-  ${green}9.${plain} 设置 V2bX 开机自启
-  ${green}10.${plain} 取消 V2bX 开机自启
-————————————————
-  ${green}11.${plain} 一键安装 bbr (最新内核)
-  ${green}12.${plain} 查看 V2bX 版本
-  ${green}13.${plain} 生成 X25519 密钥
-  ${green}14.${plain} 升级 V2bX 维护脚本
-  ${green}15.${plain} 生成 V2bX 配置文件
-  ${green}16.${plain} 放行 VPS 的所有网络端口
-  ${green}17.${plain} 退出脚本
+  Tập lệnh quản lý phụ trợ ${green}V2bX, ${plain}${red} không áp dụng được cho docker${plain}
+--- https://github.com/qtai2901/V2bX ---
+  ${green}0.${plain} Sửa đổi cấu hình
+—————————————————
+  ${green}1.${plain} Cài đặt V2bX
+  ${green}2.${plain} Cập nhật V2bX
+  ${green}3.${plain} Gỡ cài đặt V2bX
+—————————————————
+  ${green}4.${plain} Bắt đầu V2bX
+  ${green}5.${plain} Dừng V2bX
+  ${green}6.${plain} Khởi động lại V2bX
+  ${green}7.${plain} Xem trạng thái V2bX
+  ${green}8.${plain} Xem nhật ký V2bX
+—————————————————
+  ${green}9.${plain} Đặt V2bX để tự động khởi động khi khởi động
+  ${green}10.${plain} Hủy tự động khởi động V2bX khi khởi động
+—————————————————
+  ${green}11.${plain} Cài đặt bbr bằng một cú nhấp chuột (kernel mới nhất)
+  ${green}12.${plain} Xem phiên bản V2bX
+  ${green}13.${plain} Tạo khóa X25519
+  ${green}14.${plain} Nâng cấp tập lệnh bảo trì V2bX
+  ${green}15.${plain} Tạo tệp cấu hình V2bX
+  ${green}16.${plain} Giải phóng tất cả các cổng mạng của VPS
+  tập lệnh thoát ${green}17.${plain}
  "
  #后续更新可加入上方字符串中
     show_status
@@ -883,7 +857,7 @@ show_menu() {
         15) generate_config_file ;;
         16) open_ports ;;
         17) exit ;;
-        *) echo -e "${red}请输入正确的数字 [0-16]${plain}" ;;
+       *) echo -e "${red}Vui lòng nhập đúng số [0-16]${plain}" ;;
     esac
 }
 
