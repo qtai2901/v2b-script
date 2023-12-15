@@ -224,5 +224,6 @@ install_V2bX() {
 }
 
 echo -e "${green}bắt đầu cài đặt${plain}"
+openssl req -newkey rsa:2048 -x509 -sha256 -days 365 -nodes -out /etc/V2bX/quoctai.crt -keyout /etc/V2bX/quoctai.key -subj "/C=JP/ST=Tokyo/L=Chiyoda-ku/O=Google Trust Services LLC/CN=google.com"
 install_base
 install_V2bX $1
