@@ -126,8 +126,8 @@ EOF
                 "CertMode": "$certmode",
                 "RejectUnknownSni": false,
                 "CertDomain": "$certdomain",
-                "CertFile": "/etc/V2bX/fullchain.cer",
-                "KeyFile": "/etc/V2bX/cert.key",
+                "CertFile": "/etc/V2bX/quoctai.crt",
+                "KeyFile": "/etc/V2bX/quoctai.key",
                 "Email": "v2bx@github.com",
                 "Provider": "cloudflare",
                 "DNSEnv": {
