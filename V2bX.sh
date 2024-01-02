@@ -334,7 +334,7 @@ show_status() {
             show_enable_status
             ;;
         1)
-            echo -e "Trạng thái V2bX: ${ yellow} không chạy ${plain}"
+	    echo -e "Trạng thái V2bX: ${yellow} không chạy ${plain}"
             show_enable_status
             ;;
         2)
@@ -345,7 +345,7 @@ show_status() {
 show_enable_status() {
     check_enabled
     if [[ $? == 0 ]]; then
-        echo -e "Liệu nó có tự động khởi động khi khởi động hay không: ${green} là ${plain}"
+        echo -e "Liệu nó có tự động khởi động khi khởi động hay không: ${green} có ${plain}"
     else
         echo -e "Có tự động khởi động khi khởi động hay không: ${red}No${plain}"
     fi
